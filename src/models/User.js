@@ -32,4 +32,4 @@ userSchema.statics.comparePassword = async (password, receivePassword) => {
     return bcrypt.compare(password, receivePassword)
 }
 
-export default model('user', userSchema);
+export default model('User', userSchema);
