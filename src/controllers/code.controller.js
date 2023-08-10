@@ -23,7 +23,7 @@ export const createCode = async (req, res) => {
 
 export const getCodes = async (req, res) => {
     const codes = await Code.find().populate("locations");
-    res.json(codes)
+    res.status(200).json({status: "OK", data: codes})
  }
  
  export const getCodeById = async (req, res) => {

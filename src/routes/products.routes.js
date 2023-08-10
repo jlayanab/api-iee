@@ -3,7 +3,7 @@ import { Router } from "express";
 const router = Router()
 
 import * as productsCtrl from '../controllers/products.controller'
-import { authJwt } from '../middleware';
+import { authJwt } from '../middlewares';
 
 router.post('/',[authJwt.verifyToken, authJwt.isModerator], productsCtrl.createProduct)
 

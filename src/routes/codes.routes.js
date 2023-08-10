@@ -3,7 +3,7 @@ import { Router } from "express";
 const router = Router()
 
 import * as codesCtrl from '../controllers/code.controller'
-import { authJwt } from '../middleware';
+import { authJwt } from '../middlewares';
 
 router.post('/',[authJwt.verifyToken, authJwt.isModerator], codesCtrl.createCode)
 //router.post('/', codesCtrl.createCode)

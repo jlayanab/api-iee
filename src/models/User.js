@@ -14,6 +14,14 @@ const userSchema = new Schema({
         type: String,
         require: true
     },
+    identification: {
+        type: String,
+        unique: true
+    },
+    mobile: {
+        type: String,
+        unique: true
+    },
     roles: [{
         ref: "Role",
         type: Schema.Types.ObjectId
