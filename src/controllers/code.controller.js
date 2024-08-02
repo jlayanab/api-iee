@@ -1,13 +1,19 @@
 import Code from '../models/Codes';
 import Location from '../models/Locations';
+import User from '../models/User';
 
 export const createCode = async (req, res) => {
-    const {name, status, location} = req.body
+    const {name, status, user, location} = req.body
 
     const newCode = new Code({
         name, 
         status
     })
+    
+    if(user){
+        const foundUsers = await User.find({email: {$in: user}})
+        newCode.user = foundUsers.map(user => user._id)
+    }
 
     if(location){
         const foundLocations = await Location.find({name: {$in: location}})
@@ -27,7 +33,7 @@ export const getCodes = async (req, res) => {
  }
  
  export const getCodeById = async (req, res) => {
-    const code = await Code.findById(req.params.codeId).populate("locations");
+    const code = await Code.findById(req.params.userId).populate("locations");
     res.status(200).json(code)
  }
  
@@ -36,7 +42,7 @@ export const getCodes = async (req, res) => {
      await Code.findByIdAndUpdate(req.params.codeIdId, req.body,{
          new: true
      })
-     res.status(200).json(updatedCode)  
+     res.status(200).json(updatedCode) 
  }
  
  export const deleteCodeById = async (req, res) => {

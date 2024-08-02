@@ -10,4 +10,6 @@ router.post('/',[
     verifySignup.checkRolesExisted
 ], userCtrl.createUser)
 
+router.get('/',[authJwt.verifyToken],userCtrl.getUsers)
+
 export default router;
