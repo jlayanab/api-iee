@@ -1,5 +1,11 @@
-import app from './app'
-import './database'
+import app from './app';
+import './database';
+import dotenv from 'dotenv';
 
-app.listen(4000);
-console.log('🚀 Server Listen on port', 4000)
+dotenv.config();
+
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
+  console.log('🚀 Server listening on port', PORT);
+});

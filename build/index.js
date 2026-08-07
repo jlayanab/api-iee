@@ -1,7 +1,11 @@
 "use strict";
 
-var _express = _interopRequireDefault(require("express"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-var app = (0, _express["default"])();
-app.listen(3000);
-console.log('Server Listen on port', 8069);
+var _app = _interopRequireDefault(require("./app"));
+require("./database");
+var _dotenv = _interopRequireDefault(require("dotenv"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
+_dotenv["default"].config();
+var PORT = process.env.PORT || 4000;
+_app["default"].listen(PORT, function () {
+  console.log('🚀 Server listening on port', PORT);
+});

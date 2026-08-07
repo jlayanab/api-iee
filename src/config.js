@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 export default {
-    SECRET: "ieeproyectos-api"
+    SECRET: process.env.SECRET || "ieeproyectos-api"
 }

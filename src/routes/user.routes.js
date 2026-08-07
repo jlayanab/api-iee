@@ -64,4 +64,45 @@ router.post('/',[
  */
 router.get('/',[authJwt.verifyToken],userCtrl.getUsers)
 
+/**
+ * @swagger
+ * /api/users/{userId}/password:
+ *   put:
+ *     summary: Modify user password
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - password
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 description: The new password
+ *     responses:
+ *       200:
+ *         description: Password updated successfully
+ *       400:
+ *         description: Password is required
+ *       404:
+ *         description: User not found
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ */
+router.put('/:userId/password', [authJwt.verifyToken], userCtrl.updatePassword)
+
 export default router;

@@ -1,13 +1,13 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-mongoose.connect("mongodb://localhost:27017/ieedb?authSource=admin", {
+dotenv.config();
+
+const mongoURI = process.env.MONGODB_URI || "mongodb://localhost:27017/ieedb?authSource=admin";
+
+mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-
-  //mongoose.connect("mongodb://sa:MpA2005mPa@190.123.36.43:27017/ieedb?authSource=admin", {
-  //  useNewUrlParser: true,
-  //  useUnifiedTopology: true,
-  //})
-  .then(() => console.log("Conectado a MongoDB"))
-  .catch(err => console.error("Error de conexión", err));
+  .then(() => console.log("Conectado a MongoDB:", mongoURI.split('@').pop()))
+  .catch(err => console.error("Error de conexión a MongoDB:", err));
