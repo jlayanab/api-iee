@@ -10,11 +10,15 @@ import codeRoutes from './routes/codes.routes';
 import itemRoutes from './routes/item.routes';
 import boxRoutes from './routes/box.routes';
 import attendanceRoutes from './routes/attendance.routes';
-import { createLocations, createRoles } from './libs/initialSetup';
+import invitationRoutes from './routes/invitation.routes';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerDocs } from './libs/swagger.js';
+import { createLocations, createRoles, createSampleData } from './libs/initialSetup';
 
 const app = express()
 createRoles();
 createLocations();
+createSampleData();
 app.set('pkg', pkg);
 app.use(express.json());
 
@@ -37,6 +41,16 @@ app.use('/api/codes', codeRoutes)
 app.use('/api/item', itemRoutes)
 app.use('/api/box', boxRoutes)
 app.use('/api/attendance', attendanceRoutes)
+app.use('/api/invitations', invitationRoutes)
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
+   customSiteTitle: "API IEE - Documentación Swagger",
+   swaggerOptions: {
+      docExpansion: 'list',
+      filter: true,
+      displayRequestDuration: true,
+   }
+}));
 
 // Programar tareas
 // Enviar recordatorios de turno cada día a las 18:00
