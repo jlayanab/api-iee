@@ -1,0 +1,25 @@
+# Bloque para copiar y pegar dentro de tu docker-compose.yml existente en la sección 'services:'
+
+  api-iee:
+    build:
+      context: ./api-iee # O la ruta donde clones el repositorio api-iee en tu servidor
+      dockerfile: Dockerfile
+    container_name: api_iee_app
+    restart: always
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      # Si ya tienes MongoDB corriendo en tu docker-compose, usa el nombre de ese servicio (ej: mongodb o mongo)
+      - MONGODB_URI=mongodb://mongodb:27017/ieedb?authSource=admin
+      - SECRET=ieeproyectos-api-secret-key-change-in-production
+      - NODE_ENV=production
+    # Si usas una red compartida existente en tu docker-compose, agrégala aquí:
+    # networks:
+    #   - red-existente
+    volumes:
+      - api_iee_pdfs:/usr/src/app/pdfs
+
+# Y en la sección 'volumes:' de tu docker-compose.yml agrega:
+# volumes:
+#   api_iee_pdfs:

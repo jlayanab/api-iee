@@ -6,12 +6,12 @@ import Invitation from '../models/Invitation';
 export const createRoles = async () => {
     try {
         const count = await Role.estimatedDocumentCount()
-        if(count >0) return;
+        if (count > 0) return;
 
         const values = await Promise.all([
-            new Role({name: 'user'}).save(),
-            new Role({name: 'moderator'}).save(),
-            new Role({name: 'admin'}).save()
+            new Role({ name: 'user' }).save(),
+            new Role({ name: 'moderator' }).save(),
+            new Role({ name: 'admin' }).save()
         ])
         console.log(values)
     } catch (error) {
@@ -22,13 +22,13 @@ export const createRoles = async () => {
 export const createLocations = async () => {
     try {
         const count = await Location.estimatedDocumentCount()
-        if(count >0) return;
+        if (count > 0) return;
 
         const values = await Promise.all([
-            new Location({name: 'nothing'}).save(),
-            new Location({name: 'UEES'}).save(),
-            new Location({name: 'Ecotec'}).save(),
-            new Location({name: 'Ecomundo'}).save()
+            new Location({ name: 'nothing' }).save(),
+            new Location({ name: 'UEES' }).save(),
+            new Location({ name: 'Ecotec' }).save(),
+            new Location({ name: 'Ecomundo' }).save()
         ])
         console.log(values)
     } catch (error) {
@@ -42,11 +42,11 @@ export const createSampleData = async () => {
         if (userCount > 0) return;
 
         const host = new User({
-            username: 'hostuser',
-            email: 'host@example.com',
-            password: await User.encryptPassword('password'),
-            identification: '1234567890',
-            mobile: '0987654321'
+            username: 'jlayanab',
+            email: 'jlayanab@icloud.com',
+            password: await User.encryptPassword('jebl2920'),
+            identification: '0920795317',
+            mobile: '0969436980'
         });
         const savedHost = await host.save();
 

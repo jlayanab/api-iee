@@ -1,0 +1,146 @@
+version: '3.8'
+
+services:
+
+  proxy:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '8085:80'
+      - '443:443'
+      - '81:81'
+    volumes:
+      - ./npm_data:/data
+      - ./npm_letsencrypt:/etc/letsencrypt
+    networks:
+      - nube_net
+
+# Contenedor 1: La Web Pública de solutionDKS
+  solutiondks_web:
+    image: node:20-alpine
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./solutiondks_landing:/app
+    command: "npm run start" # O el comando de producción (ej. pm2-runtime o node server.js)
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+    networks:
+      - nube_net
+
+  # -------------------------------------------------------------
+  # NUEVO: ONLYOFFICE DOCUMENT SERVER
+  # -------------------------------------------------------------
+  onlyoffice:
+    image: onlyoffice/documentserver:latest
+    restart: unless-stopped
+    ports:
+      - '8080:80'  # Exponemos el puerto 8080 en tu servidor físico
+    volumes:
+      - onlyoffice_data:/var/www/onlyoffice/Data
+      - onlyoffice_log:/var/log/onlyoffice
+    environment:
+      - JWT_ENABLED=true
+      - JWT_SECRET=MiClaveSecretaSuperSegura123  # <-- Cambia esto por una frase tuya si deseas
+    networks:
+      - nube_net
+
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=p4ssw0rd
+      - MYSQL_PASSWORD=p4ssw0rd
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+    networks:
+      - nube_net
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - nube_net
+
+  nextcloud:
+    image: nextcloud:34
+    restart: unless-stopped
+    ports:
+      - "8090:80"
+    volumes:
+      - nextcloud_config:/var/www/html/config
+      - /mnt/nextcloud_data:/var/www/html/data
+      - ./opcache.ini:/usr/local/etc/php/conf.d/opcache.ini:ro
+    environment:
+      - MYSQL_PASSWORD=p4ssw0rd
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=db
+      - NEXTCLOUD_TRUSTED_DOMAINS=localhost nube.solutiondks.com solutiondks.com
+      - REDIS_HOST=redis
+      - TRUSTED_PROXIES=172.16.0.0/12 192.168.0.0/16 10.0.0.0/8
+      - OVERWRITEPROTOCOL=https
+      - OVERWRITECONDADDR=^172\..*
+    depends_on:
+      - db
+      - redis
+    networks:
+      - nube_net
+
+  # -------------------------------------------------------------
+  # NUEVO: API IEE (Node.js REST API)
+  # -------------------------------------------------------------
+  api-iee:
+    build:
+      context: ./api-iee  # Carpeta donde clonas o tienes el proyecto api-iee
+      dockerfile: Dockerfile
+    container_name: api_iee_app
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - MONGODB_URI=mongodb://mongodb:27017/ieedb?authSource=admin
+      - SECRET=ieeproyectos-api-secret-key-change-in-production
+      - NODE_ENV=production
+    depends_on:
+      - mongodb
+    volumes:
+      - api_iee_pdfs:/usr/src/app/pdfs
+    networks:
+      - nube_net
+
+  # -------------------------------------------------------------
+  # NUEVO: MONGODB (Base de Datos para API IEE)
+  # -------------------------------------------------------------
+  mongodb:
+    image: mongo:6.0
+    container_name: api_iee_db
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - nube_net
+
+volumes:
+  nextcloud_config:
+  db_data:
+  redis_data:
+  npm_data:
+  npm_letsencrypt:
+  onlyoffice_data:
+  onlyoffice_log:
+  mongo_data:        # Volumen para MongoDB
+  api_iee_pdfs:      # Volumen para PDFs generados por la API
+
+networks:
+  nube_net:
+    driver: bridge

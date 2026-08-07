@@ -7,14 +7,18 @@ WORKDIR /usr/src/app
 # Copiar archivos de dependencias
 COPY package*.json ./
 
-# Instalar dependencias del proyecto
-RUN npm ci --only=production || npm install
+# Instalar todas las dependencias (incluyendo devDependencies para babel)
+RUN npm install
 
 # Copiar el código fuente
 COPY . .
 
 # Compilar el código ES6 / Babel
 RUN npm run build
+
+# Limpiar devDependencies para mantener la imagen ligera
+RUN npm prune --production
+
 
 # Crear directorio de PDFs si es necesario
 RUN mkdir -p pdfs
