@@ -3,7 +3,7 @@ import { Router } from 'express'
 const router = Router();
 
 import * as attendanceCtrl from '../controllers/attendance.controller';
-const auth = require('../middlewares/authJwt');
+import { authJwt as auth } from '../middlewares';
 
 /**
  * @swagger
