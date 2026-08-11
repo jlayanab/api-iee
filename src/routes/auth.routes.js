@@ -33,6 +33,21 @@ import {verifySignup} from '../middlewares';
  *     responses:
  *       200:
  *         description: The user has been successfully signed in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 token:
+ *                   type: string
+ *                 identification:
+ *                   type: string
+ *                 roles:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Role'
  *       400:
  *         description: Invalid credentials
  */

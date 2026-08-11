@@ -47,6 +47,7 @@ export const signIn = async (req, res) => {
     res.json({
         id: userFound.id,
         token: token, 
-        "identification": userFound.identification 
+        identification: userFound.identification,
+        roles: userFound.roles
     })
 }

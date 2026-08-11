@@ -4,21 +4,23 @@ import swaggerJSDoc from 'swagger-jsdoc';
 const PORT = process.env.PORT || 4000;
 
 const swaggerOptions = {
-  swaggerDefinition: {
-    openapi: '3.0.0',
+  definition: {
+    openapi: '3.1.0',
     info: {
-      title: 'API IEE - Documentación del Sistema',
+      title: '⚡ API IEE — Documentación del Sistema',
       version: '1.0.0',
-      description: 'API RESTful para la gestión del sistema IEE (Usuarios, Productos, Cajas, Asistencias, Invitaciones, Ítems y Códigos).',
+      description: 'API RESTful de alto rendimiento para la gestión integral del sistema IEE (Usuarios, Productos, Cajas, Asistencias, Invitaciones, Ítems y Códigos).',
       contact: {
         name: 'Jorge Layana B.',
+        email: 'jlayanab@icloud.com',
+        url: 'https://solutiondks.com',
+      },
+      license: {
+        name: 'ISC',
+        url: 'https://opensource.org/licenses/ISC',
       },
     },
     servers: [
-      {
-        url: '/',
-        description: 'Servidor Actual (Relativo)',
-      },
       {
         url: 'https://api.solutiondks.com',
         description: 'Servidor Producción (HTTPS)',
@@ -26,6 +28,15 @@ const swaggerOptions = {
       {
         url: `http://localhost:${PORT}`,
         description: 'Servidor Local de Desarrollo',
+      },
+      {
+        url: '/',
+        description: 'Servidor Actual (Relativo)',
+      },
+    ],
+    security: [
+      {
+        bearerAuth: [],
       },
     ],
     tags: [
