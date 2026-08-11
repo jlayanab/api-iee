@@ -35,6 +35,7 @@ export const signIn = async (req, res) => {
     const userFound = await User.findOne({email: email}).populate("roles");
 
     if (!userFound) return res.status(400).json({message: "User not found"})
+    if (userFound.active === false) return res.status(403).json({message: "Usuario inactivo o deshabilitado"});
 
     const matchPassword = await User.comparePassword(password, userFound.password)
     if (!matchPassword) return res.status(401).json({token: null, message: 'Invalid password'})

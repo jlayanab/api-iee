@@ -12,6 +12,7 @@ import boxRoutes from './routes/box.routes';
 import attendanceRoutes from './routes/attendance.routes';
 import invitationRoutes from './routes/invitation.routes';
 import locationRoutes from './routes/location.routes';
+import roleRoutes from './routes/role.routes';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerDocs } from './libs/swagger.js';
 import { createLocations, createRoles, createSampleData } from './libs/initialSetup';
@@ -44,6 +45,7 @@ app.use('/api/box', boxRoutes)
 app.use('/api/attendance', attendanceRoutes)
 app.use('/api/invitations', invitationRoutes)
 app.use('/api/locations', locationRoutes)
+app.use('/api/roles', roleRoutes)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
    customSiteTitle: "API IEE - Documentación Swagger",

@@ -25,6 +25,7 @@ export const verifyToken = async (req, res, next) => {
 
     const user = await User.findById(req.userId, { password: 0 });
     if (!user) return res.status(404).json({ message: 'no user found' });
+    if (user.active === false) return res.status(403).json({ message: 'Usuario deshabilitado o inactivo' });
     next();
 
   } catch (err) {
