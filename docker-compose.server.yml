@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   proxy:
@@ -120,7 +118,7 @@ services:
   # NUEVO: MONGODB (Base de Datos para API IEE)
   # -------------------------------------------------------------
   mongodb:
-    image: mongo:6.0
+    image: mongo:7.0
     container_name: api_iee_db
     restart: unless-stopped
     ports:
@@ -144,3 +142,6 @@ volumes:
 networks:
   nube_net:
     driver: bridge
+
+#git pull
+#docker compose up -d --build api-iee

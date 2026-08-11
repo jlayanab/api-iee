@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   api:
     build: .
@@ -18,7 +16,7 @@ services:
       - pdfs_data:/usr/src/app/pdfs
 
   mongodb:
-    image: mongo:6.0
+    image: mongo:7.0
     container_name: api_iee_db
     restart: always
     ports:

@@ -16,6 +16,14 @@ const swaggerOptions = {
     },
     servers: [
       {
+        url: '/',
+        description: 'Servidor Actual (Relativo)',
+      },
+      {
+        url: 'https://api.solutiondks.com',
+        description: 'Servidor Producción (HTTPS)',
+      },
+      {
         url: `http://localhost:${PORT}`,
         description: 'Servidor Local de Desarrollo',
       },
