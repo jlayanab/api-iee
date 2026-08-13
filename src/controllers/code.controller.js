@@ -1,6 +1,7 @@
 import Code from '../models/Codes';
 import Location from '../models/Locations';
 import User from '../models/User';
+import { sendNotificationToUser } from '../services/pushNotificationService';
 
 export const createCode = async (req, res) => {
     try {
@@ -80,6 +81,24 @@ export const createCode = async (req, res) => {
         }
 
         const codeSave = await newCode.save();
+
+        // Disparar Notificación Push e Interna al Receptor
+        if (newCode.recipientUser) {
+            const senderUser = req.userId ? await User.findById(req.userId) : null;
+            const senderName = senderUser ? senderUser.username : 'Un residente';
+
+            sendNotificationToUser({
+                userId: newCode.recipientUser,
+                title: '¡Has recibido un pase de acceso!',
+                message: `${senderName} te ha enviado un código de acceso/invitación.`,
+                type: 'code-received',
+                payloadData: {
+                    codeId: codeSave._id.toString(),
+                    code: codeSave.code
+                }
+            }).catch(err => console.error('Error enviando notificación push:', err));
+        }
+
         res.status(201).json(codeSave);
     } catch (error) {
         if (error.code === 11000) {

@@ -33,6 +33,38 @@ router.get('/', [authJwt.verifyToken, authJwt.isAdmin], userCtrl.getUsers);
 
 /**
  * @swagger
+ * /api/users/fcm-token:
+ *   put:
+ *     summary: Update FCM Push Notification token for authenticated user
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - fcmToken
+ *             properties:
+ *               fcmToken:
+ *                 type: string
+ *                 description: Firebase Cloud Messaging token from Flutter app
+ *     responses:
+ *       200:
+ *         description: FCM Token updated successfully
+ *       400:
+ *         description: Missing fcmToken
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.put('/fcm-token', [authJwt.verifyToken], userCtrl.updateFcmToken);
+
+/**
+ * @swagger
  * /api/users/{userId}:
  *   get:
  *     summary: Get user detail by ID

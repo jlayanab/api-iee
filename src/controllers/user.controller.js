@@ -3,7 +3,7 @@ import Role from "../models/Roles";
 
 export const createUser = async (req, res) => {
     try {
-        const { username, email, password, identification, mobile, roles, active } = req.body;
+        const { username, email, password, identification, mobile, roles, active, fcmToken } = req.body;
 
         if (!username || !email || !password) {
             return res.status(400).json({ message: "Username, email, and password are required." });
@@ -15,7 +15,8 @@ export const createUser = async (req, res) => {
             password: await User.encryptPassword(password),
             identification,
             mobile,
-            active: active !== undefined ? active : true
+            active: active !== undefined ? active : true,
+            fcmToken
         });
 
         if (roles && roles.length > 0) {
@@ -70,7 +71,7 @@ export const getUserById = async (req, res) => {
 export const updateUserById = async (req, res) => {
     try {
         const { userId } = req.params;
-        const { username, email, identification, mobile, roles, active } = req.body;
+        const { username, email, identification, mobile, roles, active, fcmToken } = req.body;
 
         const updateData = {};
         if (username !== undefined) updateData.username = username;
@@ -78,6 +79,7 @@ export const updateUserById = async (req, res) => {
         if (identification !== undefined) updateData.identification = identification;
         if (mobile !== undefined) updateData.mobile = mobile;
         if (active !== undefined) updateData.active = active;
+        if (fcmToken !== undefined) updateData.fcmToken = fcmToken;
 
         if (roles) {
             const foundRoles = await Role.find({
@@ -103,6 +105,32 @@ export const updateUserById = async (req, res) => {
             return res.status(400).json({ message: "El nombre de usuario, email, identificación o número móvil ya está en uso por otro registro." });
         }
         res.status(500).json({ message: error.message || "Error al actualizar la información del usuario", error });
+    }
+};
+
+export const updateFcmToken = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const { fcmToken } = req.body;
+
+        if (!fcmToken) {
+            return res.status(400).json({ message: "El fcmToken es requerido." });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(userId, { fcmToken }, { new: true })
+            .select('-password')
+            .populate("roles");
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        res.status(200).json({
+            message: "FCM Token actualizado exitosamente",
+            fcmToken: updatedUser.fcmToken
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message || "Error al actualizar el FCM token", error });
     }
 };
 

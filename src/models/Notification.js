@@ -1,11 +1,13 @@
-import  {Schema, model} from 'mongoose';
-import employee from './Employee';
+import { Schema, model } from 'mongoose';
 
 const notificationSchema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     employeeId: {
         type: Schema.Types.ObjectId,
-        ref: employee,
-        required: true
+        ref: 'Employee'
     },
     title: {
         type: String,
@@ -17,14 +19,18 @@ const notificationSchema = new Schema({
     },
     type: {
         type: String,
-        enum: ['shift-reminder', 'attendance-update', 'general'],
-        required: true
+        enum: ['code-received', 'access-verified', 'shift-reminder', 'attendance-update', 'general'],
+        default: 'general'
+    },
+    data: {
+        type: Schema.Types.Mixed
     },
     isRead: {
         type: Boolean,
         default: false
-    },
+    }
 }, {
+    timestamps: true,
     versionKey: false
 });
 
