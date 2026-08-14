@@ -128,6 +128,24 @@ services:
     networks:
       - nube_net
 
+  # -------------------------------------------------------------
+  # NUEVO: POSTGRESQL (Base de datos PostgreSQL accesible para desarrollo)
+  # -------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=nencarsa_asistencia
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=MpA2005mPa
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - nube_net
+
 volumes:
   nextcloud_config:
   db_data:
@@ -138,6 +156,7 @@ volumes:
   onlyoffice_log:
   mongo_data:        # Volumen para MongoDB
   api_iee_pdfs:      # Volumen para PDFs generados por la API
+  postgres_data:     # Volumen para PostgreSQL
 
 networks:
   nube_net:
